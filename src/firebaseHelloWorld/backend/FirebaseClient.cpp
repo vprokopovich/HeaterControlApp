@@ -26,7 +26,7 @@ std::string FirebaseClient::GetRequestsJsonString()
     {
         MemoryStruct chunk;
 
-        curl_easy_setopt(curl, CURLOPT_URL, GetMsgPoolUrl());
+        curl_easy_setopt(curl, CURLOPT_URL, GetMsgPoolUrl().c_str());
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, FirebaseClient::WriteMemoryCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
@@ -66,7 +66,7 @@ void FirebaseClient::SetState(const std::string& status,
         headers = curl_slist_append(headers, headerContentLength.c_str());
 
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers); 
-        curl_easy_setopt(curl, CURLOPT_URL, GetStateUrl());  
+        curl_easy_setopt(curl, CURLOPT_URL, GetStateUrl().c_str());  
         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
 
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, content.c_str());
@@ -90,7 +90,7 @@ void FirebaseClient::RemoveRequestFromList(const std::string& id)
 
     if (curl)
     {
-        curl_easy_setopt(curl, CURLOPT_URL, GetRequestIdUrl(id));  
+        curl_easy_setopt(curl, CURLOPT_URL, GetRequestIdUrl(id).c_str());  
         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
         res = curl_easy_perform(curl);
@@ -122,7 +122,7 @@ void FirebaseClient::AddResponseToServer(const std::string& id, const std::strin
         headers = curl_slist_append(headers, headerContentLength.c_str());
 
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers); 
-        curl_easy_setopt(curl, CURLOPT_URL, GetResponseUrl(id));  
+        curl_easy_setopt(curl, CURLOPT_URL, GetResponseUrl(id).c_str());  
         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
 
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, checkedData.c_str());
@@ -157,28 +157,28 @@ size_t FirebaseClient::WriteMemoryCallback(void* contents, size_t size, size_t n
     return realsize;
 }
 
-const char* FirebaseClient::GetMsgPoolUrl() const
+const std::string FirebaseClient::GetMsgPoolUrl() const
 {
     std::string url = mBaseUrl + "msg-pool.json";
-    return url.c_str();
+    return url;
 }
 
-const char* FirebaseClient::GetStateUrl() const
+const std::string FirebaseClient::GetStateUrl() const
 {
     std::string url = mBaseUrl + "state.json";
-    return url.c_str();
+    return url;
 }
 
-const char* FirebaseClient::GetRequestIdUrl(const std::string& id) const
+const std::string FirebaseClient::GetRequestIdUrl(const std::string& id) const
 {
     std::string url = mBaseUrl + "msg-pool/" + id + ".json";
-    return url.c_str();
+    return url;
 }
 
-const char* FirebaseClient::GetResponseUrl(const std::string& id) const
+const std::string FirebaseClient::GetResponseUrl(const std::string& id) const
 {
     std::string url = mBaseUrl + "responses/" + id + ".json";
-    return url.c_str();   
+    return url;   
 }
 
 const std::string FirebaseClient::EncodeJson(const std::string& status,
@@ -195,5 +195,5 @@ const std::string FirebaseClient::EncodeJson(const std::string& status,
     Json::FastWriter writer;
     std::string retVal = writer.write(root);
 
-    return retVal.c_str();
+    return retVal.c_str(); // TODO: remove c_str() call
 }

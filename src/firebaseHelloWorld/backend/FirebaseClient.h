@@ -38,10 +38,10 @@ private:
     };
 
     static size_t WriteMemoryCallback(void* contents, size_t size, size_t nmemb, void* userp);
-    const char* GetMsgPoolUrl() const;
-    const char* GetStateUrl() const;
-    const char* GetRequestIdUrl(const std::string& id) const;
-    const char* GetResponseUrl(const std::string& id) const;
+    const std::string GetMsgPoolUrl() const;
+    const std::string GetStateUrl() const;
+    const std::string GetRequestIdUrl(const std::string& id) const;
+    const std::string GetResponseUrl(const std::string& id) const;
     const std::string EncodeJson(const std::string& status,
                                  const std::int32_t targetTemp,
                                  const std::string& targetTime,
