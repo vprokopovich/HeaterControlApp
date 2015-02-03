@@ -3,17 +3,26 @@ var msgPool = null;
 var state = null;
 var targetTemperatureTimer = null;
 var halfCircularSlider = null;
+//var onlineRequestTimer = null;
+
+var firebaseClient = new FirebaseClient("https://heater-control.firebaseio.com/");
 
 $(document).ready(function()
 {
+    firebaseClient.Init();
+    firebaseClient.SetCallbackOnline(onOnlineChange);
+    /*
     msgPool = new Firebase('https://heater-control.firebaseio.com/msg-pool/');
     state   = new Firebase('https://heater-control.firebaseio.com/state/');
 
     state.on('value', handleStateChanged);
     msgPool.on('child_removed', handleMsgResponse);
     msgPool.on('child_added', handleMsgRequest);
+    */
 
     $("input#txtTargetTemp").change(onTargetTemperatureChange);
+
+
 
 /*
     halfCircularSlider = $('#slider').CircularSlider({ 
@@ -72,8 +81,8 @@ function updateView(status, temperature, targetTemperature, targetTime, timerAct
     if (tempToSet > maxTemp) tempToSet = maxTemp;
 
     halfCircularSlider = $('#slider').CircularSlider({ 
-        min : 17, 
-        max: 40, 
+        min : 16, 
+        max: 29, 
         value : tempToSet,
         radius: 93,
         labelSuffix: "&deg;",
@@ -107,11 +116,27 @@ function updateViewProcessingRequests()
 
 function onTargetTemperatureChange(value)
 {
-    //var newTemperature = $("input#txtTargetTemp").val();
-    //$("body").append(value);
-    //alert(value);
     msgPool.push({'action': 'RequestSetTemp', 'value': value});
-    //var a = halfCircularSlider.value;
+}
+function onTargetTimeChange(value)
+{
+    var time = "12:00";
+    var temperature = 26;
+    msgPool.push({'action': 'RequestSetTime', 'time': time, 'temperature': temperature});
+}
+
+function onOnlineChange(isOnline)
+{
+    if (isOnline == true)
+    {
+        $("div#pageConnecting").css("display", "none");
+        $("div#pageMain").css("display", "block");
+    }
+    else
+    {
+        $("div#pageConnecting").css("display", "block");
+        $("div#pageMain").css("display", "none");
+    }
 }
 
 function isEmpty(obj)

@@ -52,3 +52,32 @@ const RequestType RequestDummy::GetType()
 {
 	return RequestType::DummyRequest;
 }
+
+RequestOnline::RequestOnline(const std::string& id, const double timestamp)
+: mId(id)
+, mTimestamp(timestamp)
+{
+}
+
+RequestOnline::~RequestOnline()
+{
+}
+
+void RequestOnline::Process()
+{
+    TRC_DEBUG("RequestOnline::Process");
+    FirebaseClient client("https://heater-control.firebaseio.com/");
+    //client.SetState("Done", mTemperature + 2, "currentTime", mTemperature);
+    //client.RemoveRequestFromList(mId);
+    client.AddResponseToServer(mId, "{\"result\" : \"done\"}");
+}
+
+const std::string& RequestOnline::GetId()
+{
+    return mId;
+}
+
+const RequestType RequestOnline::GetType()
+{
+    return RequestType::DummyRequest;
+}

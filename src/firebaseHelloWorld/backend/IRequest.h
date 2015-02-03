@@ -8,6 +8,7 @@
 enum class RequestType
 {
 	None,
+	Online,
 	SetTemperature,
 	DummyRequest
 };

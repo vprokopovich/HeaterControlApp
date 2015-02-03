@@ -52,4 +52,29 @@ private:
 	std::string	  mId;
 };
 
+class RequestOnline : public IRequest
+{
+public:
+
+	/**
+	 * 
+	 */
+	RequestOnline(const std::string& id, const double timestamp);
+	~RequestOnline();
+
+	virtual void Process() override;
+	virtual const std::string& GetId() override;
+	virtual const RequestType GetType() override;
+
+private:
+	/**
+	 * Default contructor is unimplemented to avoid misusing
+	 */
+	RequestOnline();
+
+private:
+	std::string	  mId;
+	double mTimestamp;
+};
+
 #endif // REQUEST_H

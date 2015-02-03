@@ -4,12 +4,17 @@
         <script src='https://cdn.firebase.com/js/client/2.0.4/firebase.js'></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="js/circular-slider.js"></script>
+        <script src="js/firebaseClient.js"></script>
         <script src="js/main.js"></script>
         <link href="css/main.css" rel="stylesheet" type="text/css">
         <link href="css/circular-slider.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <div id="pageMain">
+        <div id="pageConnecting" class="page">
+            <h1>CONNECTING</h1>
+            <img id="imgConnecting" src="img/ajax-loader.gif" alt="Connecting" />
+        </div>
+        <div id="pageMain" class="page">
             <h1>HEATER STASTUS</h1>
             <div id="lblStatus"></div>
 
