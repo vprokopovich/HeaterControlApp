@@ -1,6 +1,7 @@
 #include "Request.h"
 #include <CTrace.h>
 #include "FirebaseClient.h"
+#include <json/json.h>
 
 RequestSetTemperature::RequestSetTemperature(const std::string& id, const std::uint32_t temperature)
 : mId(id)
@@ -15,9 +16,19 @@ RequestSetTemperature::~RequestSetTemperature()
 void RequestSetTemperature::Process()
 {
 	FirebaseClient client("https://heater-control.firebaseio.com/");
-	client.SetState("Done", mTemperature + 2, "currentTime", mTemperature);
+	client.SetState("Done", mTemperature, "currentTime", mTemperature + 2);
 	client.RemoveRequestFromList(mId);
-	client.AddResponseToServer(mId, "{\"result\" : \"done\"}");
+
+    Json::Value jsonResponse;
+    jsonResponse["status"] = std::string("Heating");
+    jsonResponse["targetTemperature"] = mTemperature;
+    jsonResponse["targetTime"] = std::string("CurrentTime");
+    jsonResponse["currentTemperature"] = mTemperature + 2;
+
+    Json::FastWriter writer;
+    std::string response = writer.write(jsonResponse);
+
+	client.AddResponseToServer(mId, response);
 }
 
 const std::string& RequestSetTemperature::GetId()

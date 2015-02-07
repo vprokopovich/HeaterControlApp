@@ -463,7 +463,7 @@ SOFTWARE.
                     onAnimate = false;
                     next = d360;
                 }
-                setValue(shapes[settings.shape].deg2Val(next));
+                setValue(shapes[settings.shape].deg2Val(next), true);
             };
 
             var timer = window.setInterval(animate, delay);
@@ -561,7 +561,7 @@ SOFTWARE.
             return settings.formLabel ? settings.formLabel(value, settings.labelPrefix, settings.labelSuffix) : settings.labelPrefix + value + settings.labelSuffix;
         };
 
-        var setValue = function(value) {
+        var setValue = function(value, duringAnimation) {
 
             if (((value | 0) !== value)) throw "Invalid input (expected integer) : " + value;
 
@@ -577,7 +577,10 @@ SOFTWARE.
             jcsIndicator.css('left', x + "px");
             jcsValue.html(buildLabel(value));
 
-            if (settings.slide && $.isFunction(settings.slide)) settings.slide(slider, val);
+            if (duringAnimation == true)
+            {
+                if (settings.slide && $.isFunction(settings.slide)) settings.slide(slider, val);
+            }
 
         };
 

@@ -7,10 +7,14 @@
 #include "RequestFactory.h"
 #include <CTrace.h>
 
+#include <unistd.h>
+
 int main(void)
 {
     FirebaseClient client("https://heater-control.firebaseio.com/");
 
+    while(true)
+    {
     try
     {
         auto document = client.GetRequestsJsonString();
@@ -24,6 +28,8 @@ int main(void)
     catch(std::exception& ex)
     {
         TRC_ERROR("%s", ex.what());
+    }
+    sleep(1);
     }
 
     return 0;
